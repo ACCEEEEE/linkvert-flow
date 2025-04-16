@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Access Key Generator</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
+    }
+    .step {
+      margin: 30px auto;
+      width: 250px;
+      padding: 20px;
+      border: 2px solid white;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .step:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    .done {
+      background-color: #00cc66 !important;
+      border-color: #00cc66;
+      color: #000;
+      cursor: default;
+    }
+    .locked {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Complete These Steps to Access the Key Generator</h1>
+
+  <div class="step" id="step1">Step 1: Visit Linkvertise 1</div>
+  <div class="step locked" id="step2">Step 2: Visit Linkvertise 2</div>
+  <div class="step locked" id="step3">Step 3: Visit Linkvertise 3</div>
+
+  <div style="margin-top: 50px;">
+    <button id="continueBtn" disabled style="padding: 10px 30px; font-size: 1rem; border-radius: 10px; background: #333; color: #fff; border: 2px solid #fff; cursor: not-allowed;">Continue</button>
+  </div>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+    
+      if (!token) {
+        console.log("No token found in URL.");
+        return;
+      }
+    
+      try {
+        const response = await fetch(`/api/verify-token?token=${token}`);
+        const data = await response.json();
+    
+        if (data.valid) {
+          // ✅ They completed the ad
+          document.getElementById("stage2").style.display = "block";
+        } else {
+          // ❌ Didn't complete the ad
+          alert("Please complete the Linkvertise ad to continue.");
+        }
+      } catch (err) {
+        console.error("Token verification failed", err);
+      }
+    });
+    </script>
+    
+    <!-- Add this to your HTML -->
+    <button onclick="window.location.href='https://linkvertise.com/...yourlink1...&target=your-vercel-link/start.html'">
+      Unlock Stage 1
+    </button>
+    
+    <div id="stage2" style="display: none;">
+      <button onclick="window.location.href='https://linkvertise.com/...yourlink2...&target=your-vercel-link/start.html'">
+        Unlock Stage 2
+      </button>
+    </div>    
+
+</body>
+</html>
