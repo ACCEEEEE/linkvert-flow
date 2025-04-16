@@ -52,7 +52,10 @@
   <script>
     window.addEventListener("DOMContentLoaded", async () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");
+      const stage = urlParams.get('stage');
+      const token = urlParams.get('token');
+
+      // You can now validate the token (ideally with backend)
     
       if (!token) {
         console.log("No token found in URL.");
