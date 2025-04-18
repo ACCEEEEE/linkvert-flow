@@ -56,7 +56,19 @@
       const token = urlParams.get('token');
 
       // You can now validate the token (ideally with backend)
-    
+
+      fetch(`/api/verify-token?token=${token}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // ✅ Token is valid, unlock the next stage
+            document.getElementById('stage2-btn').style.display = 'block';
+          } else {
+            // ❌ Invalid token
+            alert("You didn't complete the Linkvertise step properly.");
+          }
+        });
+      
       if (!token) {
         console.log("No token found in URL.");
         return;
