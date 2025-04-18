@@ -1,6 +1,7 @@
 const validTokens = {
   'stage1': '583cddc7bb3cb460cde0b93979f1f324c6faa32495294fcc863ba9049361a459',
-  'stage2': '583cddc7bb3cb460cde0b93979f1f324c6faa32495294fcc863ba9049361a459'
+  'stage2': '583cddc7bb3cb460cde0b93979f1f324c6faa32495294fcc863ba9049361a459',
+  'stage3': '583cddc7bb3cb460cde0b93979f1f324c6faa32495294fcc863ba9049361a459'
 };
 
 const sessionTokens = new Map(); // In-memory session access tokens
