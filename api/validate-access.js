@@ -1,9 +1,14 @@
+// api/check-access.js
 import { sessionTokens } from './verify-token';
 
 export default function handler(req, res) {
   const { access } = req.query;
-  if (sessionTokens.has(access)) {
-    return res.status(200).json({ valid: true });
+
+  if (!access) {
+    return res.status(400).json({ valid: false, message: 'Missing access token' });
   }
-  return res.status(403).json({ valid: false });
+
+  const isValid = sessionTokens.has(access);
+
+  return res.status(isValid ? 200 : 403).json({ valid: isValid });
 }
