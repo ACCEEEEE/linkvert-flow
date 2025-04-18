@@ -41,66 +41,51 @@
 
   <h1>Complete These Steps to Access the Key Generator</h1>
 
-  <div class="step" id="step1">Step 1: Visit Linkvertise 1</div>
-  <div class="step locked" id="step2">Step 2: Visit Linkvertise 2</div>
-  <div class="step locked" id="step3">Step 3: Visit Linkvertise 3</div>
+  <div class="step" id="step1" onclick="window.location.href='https://linkvertise.com/your-link1?o=sharing'">Step 1: Visit Linkvertise 1</div>
+  <div class="step locked" id="step2" onclick="window.location.href='https://linkvertise.com/your-link2?o=sharing'">Step 2: Visit Linkvertise 2</div>
+  <div class="step locked" id="step3" onclick="window.location.href='https://linkvertise.com/your-link3?o=sharing'">Step 3: Visit Linkvertise 3</div>
 
   <div style="margin-top: 50px;">
     <button id="continueBtn" disabled style="padding: 10px 30px; font-size: 1rem; border-radius: 10px; background: #333; color: #fff; border: 2px solid #fff; cursor: not-allowed;">Continue</button>
   </div>
 
   <script>
-    window.addEventListener("DOMContentLoaded", async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const stage = urlParams.get('stage');
-      const token = urlParams.get('token');
+    const stage = parseInt(new URLSearchParams(window.location.search).get("stage")) || 0;
 
-      // You can now validate the token (ideally with backend)
+    function unlockStep(id) {
+      const el = document.getElementById(id);
+      el.classList.remove("locked");
+      el.classList.add("done");
+    }
 
-      fetch(`/api/verify-token?token=${token}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            // ✅ Token is valid, unlock the next stage
-            document.getElementById('stage2-btn').style.display = 'block';
-          } else {
-            // ❌ Invalid token
-            alert("You didn't complete the Linkvertise step properly.");
-          }
-        });
-      
-      if (!token) {
-        console.log("No token found in URL.");
-        return;
-      }
-    
-      try {
-        const response = await fetch(`/api/verify-token?token=${token}`);
-        const data = await response.json();
-    
-        if (data.valid) {
-          // ✅ They completed the ad
-          document.getElementById("stage2").style.display = "block";
-        } else {
-          // ❌ Didn't complete the ad
-          alert("Please complete the Linkvertise ad to continue.");
-        }
-      } catch (err) {
-        console.error("Token verification failed", err);
-      }
-    });
-    </script>
-    
-    <!-- Add this to your HTML -->
-    <button onclick="window.location.href='https://link-hub.net/1339834/macrokeygenerator'">
-      Unlock Stage 1
-    </button>
-    
-    <div id="stage2" style="display: none;">
-      <button onclick="window.location.href='https://direct-link.net/1339834/stage2macrokeygenerator'">
-        Unlock Stage 2
-      </button>
-    </div>    
+    function enableButton() {
+      const btn = document.getElementById("continueBtn");
+      btn.disabled = false;
+      btn.style.cursor = "pointer";
+      btn.onclick = async () => {
+        const res = await fetch("/api/validate-access/generate-token", { method: "POST" });
+        const data = await res.json();
+        window.location.href = `/generate.html?access=${data.token}`;
+      };
+    }
+
+    // Logic for progression
+    if (stage === 0) {
+      // Starting fresh, show only step1
+    } else if (stage === 1) {
+      unlockStep("step1");
+      document.getElementById("step2").classList.remove("locked");
+    } else if (stage === 2) {
+      unlockStep("step1");
+      unlockStep("step2");
+      document.getElementById("step3").classList.remove("locked");
+    } else if (stage === 3) {
+      unlockStep("step1");
+      unlockStep("step2");
+      unlockStep("step3");
+      enableButton();
+    }
+  </script>
 
 </body>
 </html>
