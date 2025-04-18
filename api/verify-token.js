@@ -1,21 +1,19 @@
-// api/verify-token.js
-
-import axios from 'axios';
-
-export default async function handler(req, res) {
+export default function handler(req, res) {
   const { token } = req.query;
 
-  if (!token) return res.status(400).json({ valid: false, error: 'No token provided' });
+  // Replace this with your actual list of valid tokens
+  const validTokens = [
+    '583cddc7bb3cb460cde0b93979f1f324c6faa32495294fcc863ba9049361a459', // stage 1
+    '583cddc7bb3cb460cde0b93979f1f324c6faa32495294fcc863ba9049361a459',
+  ];
 
-  try {
-    const response = await axios.get(`https://publisher.linkvertise.com/api/v1/redirect/link/token/validate/${token}`);
+  if (!token) {
+    return res.status(400).json({ success: false, message: 'Missing token' });
+  }
 
-    if (response.data.data.valid) {
-      res.status(200).json({ valid: true });
-    } else {
-      res.status(200).json({ valid: false });
-    }
-  } catch (err) {
-    res.status(500).json({ valid: false, error: 'Verification failed' });
+  if (validTokens.includes(token)) {
+    return res.status(200).json({ success: true, message: 'Token valid' });
+  } else {
+    return res.status(403).json({ success: false, message: 'Invalid token' });
   }
 }
